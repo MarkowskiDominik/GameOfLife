@@ -9,26 +9,39 @@ public class Cell extends Observable {
 	private Integer row;
 	private Observer observer;
 	private CellState cellState;
-	private Integer numberOfLivingNeighbors;
-
-	public Cell(Integer column, Integer row, CellState cellState) {
+	private Integer numberOfLivingNeighbors = 0;
+	
+	public Cell(Integer column, Integer row, CellState cellState, Observer observer) {
 		this.row = row;
 		this.column = column;
 		this.cellState = cellState;
-		if (cellState == CellState.LIVING) {
-			numberOfLivingNeighbors = 0;
-		}
-		numberOfLivingNeighbors = 1;
-	}
-
-	public void addObserver(Observer observer) {
 		this.observer = observer;
 	}
 
-	public void deleteObserver(Observer observer) {
-		if (this.observer == observer) {
-			observer = null;
-		}
+	public Cell(Integer column, Integer row, CellState cellState) {
+		this(column, row, cellState, null);
+	}
+
+	public Cell(Integer column, Integer row) {
+		this(column, row, CellState.LIVING, null);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return (this.column.equals(((Cell) obj).getColumn()) && this.row.equals(((Cell) obj).getRow()));
+	}
+
+	@Override
+	public String toString() {
+		return column.toString() + " " + row.toString();
+	}
+
+	public void setObserver(Observer observer) {
+		this.observer = observer;
+	}
+
+	public void deleteObserver() {
+		observer = null;
 	}
 
 	public void notifyObservers() {
@@ -71,6 +84,10 @@ public class Cell extends Observable {
 
 	public void setCellState(CellState cellState) {
 		this.cellState = cellState;
+	}
+	
+	public Integer getNumberOfLivingNeighbors() {
+		return numberOfLivingNeighbors;
 	}
 
 	public void setNumberOfLivingNeighbors(Integer numberOfLivingNeighbors) {
