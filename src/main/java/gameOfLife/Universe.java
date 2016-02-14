@@ -1,22 +1,23 @@
 package gameOfLife;
 
-import java.util.LinkedList;
+import java.util.TreeSet;
 import java.util.Observable;
 import java.util.Observer;
 
 public class Universe implements Observer {
 
-	private LinkedList<Cell> cells;
-	private LinkedList<Cell> updates;
+	private TreeSet<Cell> cells;
+	private TreeSet<Cell> updates;
 
 	public Universe() {
-		cells = new LinkedList<Cell>();
-		updates = new LinkedList<Cell>();
+		cells = new TreeSet<Cell>();
+		updates = new TreeSet<Cell>();
 	}
 
 	public void symulationOfCellsLife() {
 		requestStatusOfCells();
 		enterOfUpdates();
+		deleteCellsOfZeroLivingNeighbors();
 	}
 
 	private void requestStatusOfCells() {
@@ -29,74 +30,77 @@ public class Universe implements Observer {
 		updates.add((Cell) cell);
 	}
 
+	public void initializeCells(TreeSet<Cell> cells) {
+		this.cells = new TreeSet<Cell>(cells);
+		this.updates = new TreeSet<Cell>(cells);
+		enterOfUpdates();
+	}
+	
 	private void enterOfUpdates() {
 		for (Cell update : updates) {
 			if (update.getCellState() == CellState.REVIVAL) {
 				revivalUpdate(update);
 			}
-			if (update.getCellState() == CellState.DYING) {
+			if (update.getCellState() == CellState.DIES) {
 				dyingUpdate(update);
 			}
 		}
 		updates.clear();
-		deleteCellsOfZeroLivingNeighbors();
 	}
 
 	private void revivalUpdate(Cell update) {
 		update.setCellState(CellState.LIVING);
-		addNewNeighbors(update);
-		changeNumberOfLivingNeighbors(update, 1);
+		addToCellExistingNeighbors(update);
+		generateNewNeighbors(update);
+		update.increaseCountersNeighbors();
 	}
 
 	private void dyingUpdate(Cell update) {
 		update.setCellState(CellState.NEIGHBOR);
-		changeNumberOfLivingNeighbors(update, -1);
+		update.decreaseCountersNeighbors();
 	}
 
-	private void changeNumberOfLivingNeighbors(Cell update, int change) {
-		Integer cellColumn = update.getColumn();
-		Integer cellRow = update.getRow();
+	private void addToCellExistingNeighbors(Cell update) {
+		Integer updateColumn = update.getColumn();
+		Integer updateRow = update.getRow();
 
-		for (Cell cell : cells) {
-			Integer updateRow = cell.getRow();
-			Integer updateColumn = cell.getColumn();
-			if (cellRow - 2 < updateRow && updateRow < cellRow + 2 && cellColumn - 2 < updateColumn
-					&& updateColumn < cellColumn + 2 && !(updateRow == cellRow && updateColumn == cellColumn)) {
-				cell.setNumberOfLivingNeighbors(cell.getNumberOfLivingNeighbors() + change);
+		for (Cell neighbor : cells) {
+			Integer neighborColumn = neighbor.getColumn();
+			Integer neighborRow = neighbor.getRow();
+			if (updateRow - 2 < neighborRow && neighborRow < updateRow + 2 && updateColumn - 2 < neighborColumn
+					&& neighborColumn < updateColumn + 2 && !(neighborRow == updateRow && neighborColumn == updateColumn)) {
+				update.addNeighbor(neighbor);
 			}
-		}
+		}		
 	}
 
-	private void addNewNeighbors(Cell update) {
+	private void generateNewNeighbors(Cell update) {
 		Integer row = update.getRow();
 		Integer column = update.getColumn();
 
-		for (int i = -1; i < 2; i++) {
-			for (int j = -1; j < 2; j++) {
+		for (int i = -1; i <= 1; i++) {
+			for (int j = -1; j <= 1; j++) {
 				Cell neighbor = new Cell(column + i, row + j, CellState.NEIGHBOR, this);
 				if (!cells.contains(neighbor)) {
 					cells.add(neighbor);
+					update.addNeighbor(neighbor);
 				}
 			}
 		}
 	}
 
 	private void deleteCellsOfZeroLivingNeighbors() {
-		LinkedList<Cell> toRemove = new LinkedList<Cell>();
+		TreeSet<Cell> toRemove = new TreeSet<Cell>();
 		for (Cell cell : cells) {
 			if (cell.getNumberOfLivingNeighbors().equals(Integer.valueOf(0))) {
+				cell.requestOfRemoveToNeighbors();
 				toRemove.add(cell);
 			}
 		}
 		cells.removeAll(toRemove);
 	}
 
-	public LinkedList<Cell> getCells() {
+	public TreeSet<Cell> getCells() {
 		return cells;
 	}
-
-	public void setCells(LinkedList<Cell> cells) {
-		this.cells = new LinkedList<Cell>(cells);
-	}
-
 }

@@ -2,7 +2,7 @@ package gameOfLife;
 
 import static org.junit.Assert.*;
 
-import java.util.LinkedList;
+import java.util.TreeSet;
 
 import org.junit.After;
 import org.junit.Before;
@@ -11,11 +11,11 @@ import org.junit.Test;
 public class GameOfLifeTest {
 
 	private GameOfLife gameOfLife;
-	private LinkedList<Cell> livingCells;
+	private TreeSet<Cell> livingCells;
 
 	@Before
 	public void initializeBowlingGameResultCalculator() {
-		livingCells = new LinkedList<Cell>();
+		livingCells = new TreeSet<Cell>();
 	}
 
 	@After
@@ -120,7 +120,7 @@ public class GameOfLifeTest {
 		livingCells.add(new Cell(2, 2));
 		livingCells.add(new Cell(3, 2));
 		
-		LinkedList<Cell> expectedCells = new LinkedList<Cell>();
+		TreeSet<Cell> expectedCells = new TreeSet<Cell>();
 		expectedCells.add(new Cell(2, 1));
 		expectedCells.add(new Cell(2, 2));
 		expectedCells.add(new Cell(2, 3));
@@ -170,7 +170,7 @@ public class GameOfLifeTest {
 		livingCells.add(new Cell(2, 2));
 		livingCells.add(new Cell(3, 2));
 		
-		LinkedList<Cell> expectedCells = new LinkedList<Cell>();
+		TreeSet<Cell> expectedCells = new TreeSet<Cell>();
 		expectedCells.add(new Cell(2, 1));
 		expectedCells.add(new Cell(2, 2));
 		expectedCells.add(new Cell(2, 3));
@@ -201,7 +201,7 @@ public class GameOfLifeTest {
 		livingCells.add(new Cell(3, 2));
 		livingCells.add(new Cell(2, 3));
 		
-		LinkedList<Cell> expectedCells = new LinkedList<Cell>();
+		TreeSet<Cell> expectedCells = new TreeSet<Cell>();
 		expectedCells.add(new Cell(1, 1));
 		expectedCells.add(new Cell(2, 1));
 		expectedCells.add(new Cell(3, 1));
