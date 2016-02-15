@@ -2,6 +2,7 @@ package gameOfLife;
 
 import static org.junit.Assert.*;
 
+import java.util.Set;
 import java.util.TreeSet;
 
 import org.junit.After;
@@ -11,7 +12,7 @@ import org.junit.Test;
 public class GameOfLifeTest {
 
 	private GameOfLife gameOfLife;
-	private TreeSet<Cell> livingCells;
+	private Set<Cell> livingCells;
 
 	@Before
 	public void initializeGameOfLife() {

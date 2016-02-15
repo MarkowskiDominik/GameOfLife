@@ -1,13 +1,14 @@
 package gameOfLife;
 
+import java.util.Set;
 import java.util.TreeSet;
 
 public class GameOfLife {
 
 	private Universe universe;
-	private TreeSet<Cell> cells;
+	private Set<Cell> cells;
 
-	public GameOfLife(TreeSet<Cell> cells) {
+	public GameOfLife(Set<Cell> cells) {
 		this.cells = new TreeSet<Cell>(cells);
 		universe = new Universe();
 		

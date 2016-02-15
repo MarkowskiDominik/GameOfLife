@@ -3,11 +3,12 @@ package gameOfLife;
 import java.util.TreeSet;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Set;
 
 public class Universe implements Observer {
 
-	private TreeSet<Cell> cells;
-	private TreeSet<Cell> updates;
+	private Set<Cell> cells;
+	private Set<Cell> updates;
 
 	public Universe() {
 		cells = new TreeSet<Cell>();
@@ -30,7 +31,7 @@ public class Universe implements Observer {
 		updates.add((Cell) cell);
 	}
 
-	public void initializeCells(TreeSet<Cell> cells) {
+	public void initializeCells(Set<Cell> cells) {
 		this.cells = new TreeSet<Cell>(cells);
 		this.updates = new TreeSet<Cell>(cells);
 		enterOfUpdates();
@@ -93,14 +94,14 @@ public class Universe implements Observer {
 		TreeSet<Cell> toRemove = new TreeSet<Cell>();
 		for (Cell cell : cells) {
 			if (cell.getNumberOfLivingNeighbors().equals(Integer.valueOf(0))) {
-				cell.requestOfRemoveToNeighbors();
+				cell.requestOfRemoveFromNeighbors();
 				toRemove.add(cell);
 			}
 		}
 		cells.removeAll(toRemove);
 	}
 
-	public TreeSet<Cell> getCells() {
+	public Set<Cell> getCells() {
 		return cells;
 	}
 }

@@ -2,6 +2,7 @@ package gameOfLife;
 
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Set;
 import java.util.TreeSet;
 
 public class Cell extends Observable implements Comparable<Cell> {
@@ -11,7 +12,7 @@ public class Cell extends Observable implements Comparable<Cell> {
 	private Observer observer;
 	private CellState cellState;
 	private Integer numberOfLivingNeighbors = 0;
-	private TreeSet<Cell> neighbors;
+	private Set<Cell> neighbors;
 	
 	public Cell(Integer column, Integer row, CellState cellState, Observer observer) {
 		this.row = row;
@@ -30,8 +31,34 @@ public class Cell extends Observable implements Comparable<Cell> {
 	}
 
 	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((column == null) ? 0 : column.hashCode());
+		result = prime * result + ((row == null) ? 0 : row.hashCode());
+		return result;
+	}
+
+	@Override
 	public boolean equals(Object obj) {
-		return (this.column.equals(((Cell) obj).getColumn()) && this.row.equals(((Cell) obj).getRow()));
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Cell other = (Cell) obj;
+		if (column == null) {
+			if (other.column != null)
+				return false;
+		} else if (!column.equals(other.column))
+			return false;
+		if (row == null) {
+			if (other.row != null)
+				return false;
+		} else if (!row.equals(other.row))
+			return false;
+		return true;
 	}
 
 	public int compareTo(Cell cell) {
@@ -40,11 +67,6 @@ public class Cell extends Observable implements Comparable<Cell> {
 			result = row.compareTo(cell.getRow());
 		}
 		return result;
-	}
-
-	@Override
-	public String toString() {
-		return column.toString() + " " + row.toString();
 	}
 
 	public void setObserver(Observer observer) {
@@ -65,7 +87,7 @@ public class Cell extends Observable implements Comparable<Cell> {
 		neighbors.add(neighbor);
 	}
 
-	public void requestOfRemoveToNeighbors() {
+	public void requestOfRemoveFromNeighbors() {
 		for (Cell neighbor : neighbors) {
 			neighbor.removeNeighbor(this);;
 		}
@@ -133,9 +155,5 @@ public class Cell extends Observable implements Comparable<Cell> {
 	
 	public Integer getNumberOfLivingNeighbors() {
 		return numberOfLivingNeighbors;
-	}
-
-	public void setNumberOfLivingNeighbors(Integer numberOfLivingNeighbors) {
-		this.numberOfLivingNeighbors = numberOfLivingNeighbors;
 	}
 }
