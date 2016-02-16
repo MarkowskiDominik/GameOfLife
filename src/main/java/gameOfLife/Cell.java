@@ -82,40 +82,6 @@ public class Cell extends Observable implements Comparable<Cell> {
 			observer.update(this, cellState);
 		}
 	}
-	
-	public void addNeighbor(Cell neighbor) {
-		neighbors.add(neighbor);
-	}
-
-	public void requestOfRemoveFromNeighbors() {
-		for (Cell neighbor : neighbors) {
-			neighbor.removeNeighbor(this);;
-		}
-	}
-	
-	public void removeNeighbor(Cell neighbor) {
-		neighbors.remove(neighbor);
-	}
-	
-	public void increaseCountersNeighbors() {
-		for (Cell neighbor : neighbors) {
-			neighbor.increaseCounter();
-		}
-	}
-
-	public void increaseCounter() {
-		numberOfLivingNeighbors++;
-	}
-	
-	public void decreaseCountersNeighbors() {
-		for (Cell neighbor : neighbors) {
-			neighbor.decreaseCounter();
-		}
-	}
-	
-	public void decreaseCounter() {
-		numberOfLivingNeighbors--;
-	}
 
 	private Boolean changeCellState() {
 		if (cellState == CellState.LIVING && !(numberOfLivingNeighbors.equals(Integer.valueOf(2))
@@ -126,23 +92,49 @@ public class Cell extends Observable implements Comparable<Cell> {
 			cellState = CellState.REVIVAL;
 		}
 		
-		return (cellState != CellState.LIVING && cellState != CellState.NEIGHBOR);
+		return (cellState == CellState.DIES || cellState == CellState.REVIVAL);
+	}
+
+	public void addNeighbor(Cell neighbor) {
+		neighbors.add(neighbor);
+	}
+
+	public void requestOfRemoveFromNeighbors() {
+		for (Cell neighbor : neighbors) {
+			neighbor.removeNeighbor(this);
+		}
+	}
+	
+	private void removeNeighbor(Cell neighbor) {
+		neighbors.remove(neighbor);
+	}
+	
+	public void increaseCountersNeighbors() {
+		for (Cell neighbor : neighbors) {
+			neighbor.increaseCounter();
+		}
+	}
+
+	private void increaseCounter() {
+		numberOfLivingNeighbors++;
+	}
+	
+	public void decreaseCountersNeighbors() {
+		for (Cell neighbor : neighbors) {
+			neighbor.decreaseCounter();
+		}
+	}
+	
+	private void decreaseCounter() {
+		numberOfLivingNeighbors--;
 	}
 
 	public Integer getColumn() {
 		return column;
 	}
 
-	public void setColumn(Integer column) {
-		this.column = column;
-	}
-
 	public Integer getRow() {
 		return row;
-	}
-
-	public void setRow(Integer row) {
-		this.row = row;
 	}
 
 	public CellState getCellState() {
