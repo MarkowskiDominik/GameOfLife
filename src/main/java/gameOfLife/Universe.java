@@ -1,4 +1,4 @@
-package src.main.java.gameOfLife;
+package gameOfLife;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -16,13 +16,12 @@ public class Universe implements Observer {
     }
 
     public void symulationOfCellsLife() {
-        requestStatusOfCells();
+        gatheringNotifyOfCells();
         enterOfUpdates();
         deleteCellsOfZeroLivingNeighbors();
     }
 
-    // REVIEW dmarkowski - there is no status returned here, the method is named inaccurately
-    private void requestStatusOfCells() {
+    private void gatheringNotifyOfCells() {
         for (Cell cell : cells) {
             cell.notifyObservers();
         }
@@ -40,49 +39,51 @@ public class Universe implements Observer {
     }
 
     private void enterOfUpdates() {
-        // REVIEW dmarkowski - wrong name for Cell 'update'
-        for (Cell update : updates) {
-            if (update.getCellState() == CellState.REVIVAL) {
-                revivalUpdate(update);
+        for (Cell cellChangingState : updates) {
+            if (CellState.REVIVAL.equals(cellChangingState.getCellState())) {
+                revivalUpdate(cellChangingState);
             }
-            if (update.getCellState() == CellState.DIES) {
-                dyingUpdate(update);
+            if (CellState.DIES.equals(cellChangingState.getCellState())) {
+                dyingUpdate(cellChangingState);
             }
         }
         updates.clear();
     }
 
-    private void revivalUpdate(Cell update) {
-        update.setCellState(CellState.LIVING);
-        addToCellExistingNeighbors(update);
-        generateNewNeighbors(update);
-        update.increaseCountersNeighbors();
+    private void revivalUpdate(Cell cellChangingState) {
+        cellChangingState.setCellState(CellState.LIVING);
+        addToCellExistingNeighbors(cellChangingState);
+        generateNewNeighbors(cellChangingState);
+        cellChangingState.increaseNumberOfLivingNeighborsToCellsOnTheNeighborList();
     }
 
-    private void dyingUpdate(Cell update) {
-        update.setCellState(CellState.NEIGHBOR);
-        update.decreaseCountersNeighbors();
+    private void dyingUpdate(Cell cellChangingState) {
+        cellChangingState.setCellState(CellState.NEIGHBOR);
+        cellChangingState.decreaseNumberOfLivingNeighborsToCellsOnTheNeighborList();
     }
 
-    private void addToCellExistingNeighbors(Cell update) {
-        Integer updateColumn = update.getColumn();
-        Integer updateRow = update.getRow();
-
-        for (Cell neighbor : cells) {
-            // REVIEW dmarkowski - there is no win in using Integer here, you neither use compare nor checks for nulls
-            Integer neighborColumn = neighbor.getColumn();
-            Integer neighborRow = neighbor.getRow();
-            // REVIEW dmarkowski - please avoid such long conditions, instead extract them to a method with name. Then
-            // this method name works as a comment.
-            if (updateRow - 2 < neighborRow && neighborRow < updateRow + 2 && updateColumn - 2 < neighborColumn && neighborColumn < updateColumn + 2 && !(neighborRow == updateRow && neighborColumn == updateColumn)) {
-                update.addNeighbor(neighbor);
-            }
+    private void addToCellExistingNeighbors(Cell cellChangingState) {
+        for (Cell cell : cells) {
+        	if (cellIsNeighborForCellChangingState(cell, cellChangingState) ) {
+        		cellChangingState.addNeighbor(cell);        		
+        	}
         }
     }
 
-    private void generateNewNeighbors(Cell update) {
-        Integer row = update.getRow();
-        Integer column = update.getColumn();
+    private boolean cellIsNeighborForCellChangingState(Cell cell, Cell cellChangingState) {
+        int cellChangingStateColumn = cellChangingState.getColumn();
+        int cellChangingStateRow = cellChangingState.getRow();
+        int cellColumn = cell.getColumn();
+        int cellRow = cell.getRow();
+
+		return cellChangingStateRow - 2 < cellRow && cellRow < cellChangingStateRow + 2
+				&& cellChangingStateColumn - 2 < cellColumn && cellColumn < cellChangingStateColumn + 2
+				&& !(cellRow == cellChangingStateRow && cellColumn == cellChangingStateColumn);
+	}
+
+	private void generateNewNeighbors(Cell update) {
+        int row = update.getRow();
+        int column = update.getColumn();
 
         for (int i = -1; i <= 1; i++) {
             for (int j = -1; j <= 1; j++) {
@@ -98,7 +99,7 @@ public class Universe implements Observer {
     private void deleteCellsOfZeroLivingNeighbors() {
         TreeSet<Cell> toRemove = new TreeSet<Cell>();
         for (Cell cell : cells) {
-            if (cell.getNumberOfLivingNeighbors().equals(Integer.valueOf(0))) {
+            if (cell.getNumberOfLivingNeighbors() == 0) {
                 cell.requestOfRemoveFromNeighbors();
                 toRemove.add(cell);
             }

@@ -1,4 +1,4 @@
-package src.test.java.gameOfLife;
+package gameOfLife;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -11,8 +11,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import src.main.java.gameOfLife.Cell;
-import src.main.java.gameOfLife.GameOfLife;
+import gameOfLife.Cell;
+import gameOfLife.GameOfLife;
 
 public class GameOfLifeTest {
 
@@ -32,9 +32,9 @@ public class GameOfLifeTest {
 
     @Test
     public void oneCell_DeadInTheNextRound() {
-        // O O O O O O
+        // O O O    O O O
         // O X O => O O O
-        // O O O O O O
+        // O O O    O O O
         // given
         livingCells.add(new Cell(1, 1));
 
@@ -52,9 +52,9 @@ public class GameOfLifeTest {
 
     @Test
     public void twoCell_DeadInTheNextRound() {
-        // O O O O O O O O
+        // O O O O    O O O O
         // O X X O => O O O O
-        // O O O O O O O O
+        // O O O O    O O O O
         // given
         livingCells.add(new Cell(1, 1));
         livingCells.add(new Cell(2, 1));
@@ -71,10 +71,10 @@ public class GameOfLifeTest {
 
     @Test
     public void threeCell_RevivalOneCellInTheNextRound() {
-        // O O O O O O O O
+        // O O O O    O O O O
         // O X X O => O X X O
-        // O X O O O X X O
-        // O O O O O O O O
+        // O X O O    O X X O
+        // O O O O    O O O O
         // given
         livingCells.add(new Cell(1, 1));
         livingCells.add(new Cell(2, 1));
@@ -94,10 +94,10 @@ public class GameOfLifeTest {
 
     @Test
     public void fourCellsBlockStruct_NoChangeInTheNextRound() {
-        // O O O O O O O O
+        // O O O O    O O O O
         // O X X O => O X X O
-        // O X X O O X X O
-        // O O O O O O O O
+        // O X X O    O X X O
+        // O O O O    O O O O
         // given
         livingCells.add(new Cell(1, 1));
         livingCells.add(new Cell(1, 2));
@@ -116,11 +116,11 @@ public class GameOfLifeTest {
 
     @Test
     public void threeCellsBlinkerStruct_ChangeFromHorizontalToVerticalOrientationInTheNextRound() {
-        // O O O O O O O O O O
-        // O O O O O O O X O O
+        // O O O O O    O O O O O
+        // O O O O O    O O X O O
         // O X X X O => O O X O O
-        // O O O O O O O X O O
-        // O O O O O O O O O O
+        // O O O O O    O O X O O
+        // O O O O O    O O O O O
         // given
         livingCells.add(new Cell(1, 2));
         livingCells.add(new Cell(2, 2));
@@ -143,11 +143,11 @@ public class GameOfLifeTest {
 
     @Test
     public void threeCellsBlinkerStruct_NoChangeInTwoRound() {
-        // O O O O O O O O O O
-        // O O O O O O O X O O
+        // O O O O O    O O O O O
+        // O O O O O    O O X O O
         // O X X X O => O O X O O
-        // O O O O O O O X O O
-        // O O O O O O O O O O
+        // O O O O O    O O X O O
+        // O O O O O    O O O O O
         // given
         livingCells.add(new Cell(1, 2));
         livingCells.add(new Cell(2, 2));
@@ -166,11 +166,11 @@ public class GameOfLifeTest {
 
     @Test
     public void threeCellsBlinkerStruct_ChangeFromHorizontalToVerticalOrientationInThreeRound() {
-        // O O O O O O O O O O
-        // O O O O O O O X O O
+        // O O O O O    O O O O O
+        // O O O O O    O O X O O
         // O X X X O => O O X O O
-        // O O O O O O O X O O
-        // O O O O O O O O O O
+        // O O O O O    O O X O O
+        // O O O O O    O O O O O
         // given
         livingCells.add(new Cell(1, 2));
         livingCells.add(new Cell(2, 2));
@@ -195,11 +195,11 @@ public class GameOfLifeTest {
 
     @Test
     public void oneCell_OneCellDeadFourRevivalInTheNextRound() {
-        // O O O O O O O O O O
-        // O O X O O O X X X O
+        // O O O O O    O O O O O
+        // O O X O O    O X X X O
         // O X X X O => O X O X O
-        // O O X O O O X X X O
-        // O O O O O O O O O O
+        // O O X O O    O X X X O
+        // O O O O O    O O O O O
         // given
         livingCells.add(new Cell(2, 1));
         livingCells.add(new Cell(1, 2));

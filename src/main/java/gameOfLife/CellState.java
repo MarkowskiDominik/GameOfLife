@@ -1,4 +1,4 @@
-package src.main.java.gameOfLife;
+package gameOfLife;
 
 public enum CellState {
     LIVING, // living cell

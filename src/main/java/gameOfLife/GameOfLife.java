@@ -1,4 +1,4 @@
-package src.main.java.gameOfLife;
+package gameOfLife;
 
 import java.util.Set;
 import java.util.TreeSet;
